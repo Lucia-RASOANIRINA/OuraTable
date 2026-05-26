@@ -5,10 +5,19 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Mail\OuratableVerificationMail;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, MustVerifyEmailTrait;
+
+    /**
+     * Le nom de la table associée au modèle.
+     */
+    protected $table = 'users';
 
     /**
      * Les attributs qui peuvent être remplis massivement.
@@ -18,6 +27,15 @@ class User extends Authenticatable
         'phone',
         'email',
         'password',
+        'avatar',
+        'bio',
+        'level',
+        'xp',
+        'next_level_xp',
+        'city',
+        'birth_date',
+        'specialty',
+        'email_verified_at',
     ];
 
     /**
@@ -33,5 +51,93 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'birth_date' => 'date',
     ];
+
+    /**
+     * Relation avec les publications
+     */
+    public function posts()
+    {
+        return $this->hasMany(CommunityPost::class, 'user_id', 'id');
+    }
+
+    /**
+     * Relation avec les commentaires
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'user_id', 'id');
+    }
+
+    /**
+     * Relation avec les likes
+     */
+    public function likes()
+    {
+        return $this->hasMany(Like::class, 'user_id', 'id');
+    }
+
+    /**
+     * Personnalisation de l'envoi d'email de vérification
+     */
+    public function sendEmailVerificationNotification()
+    {
+        try {
+            $verificationUrl = $this->verificationUrl();
+            Mail::to($this->email)->send(new OuratableVerificationMail($this, $verificationUrl));
+        } catch (\Exception $e) {
+            \Log::error('Erreur envoi email vérification: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Génération de l'URL de vérification
+     */
+    protected function verificationUrl()
+    {
+        return \URL::temporarySignedRoute(
+            'verification.verify',
+            now()->addMinutes(60),
+            ['id' => $this->id, 'hash' => sha1($this->getEmailForVerification())]
+        );
+    }
+
+    /**
+     * Récupérer l'initiale du nom pour l'avatar
+     */
+    public function getInitialAttribute()
+    {
+        return strtoupper(substr($this->name, 0, 1));
+    }
+
+    /**
+     * Vérifier si l'utilisateur a un téléphone renseigné
+     */
+    public function hasPhone()
+    {
+        return !is_null($this->phone) && $this->phone !== '';
+    }
+
+    /**
+     * Vérifier si l'utilisateur est admin (si vous avez ce rôle)
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin'; // À adapter selon votre structure
+    }
+
+    /**
+     * Formater le numéro de téléphone
+     */
+    public function getFormattedPhoneAttribute()
+    {
+        if (!$this->phone) return null;
+        
+        // Formatage basique du téléphone
+        $phone = preg_replace('/[^0-9+]/', '', $this->phone);
+        return $phone;
+    }
 }

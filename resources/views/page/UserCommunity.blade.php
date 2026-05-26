@@ -189,8 +189,8 @@
         }
     }
 
-    /* IA Challenge card */
-    .ia-challenge-card {
+    /* Challenge card */
+    .challenge-card {
         background: white;
         border: 1px solid #e5e7eb;
         border-radius: 1.25rem;
@@ -198,10 +198,39 @@
         padding: 24px;
         height: 100%;
     }
-    .ia-challenge-card:hover {
+    .challenge-card:hover {
         border-color: #f97316;
         box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.1);
         transform: translateY(-2px);
+    }
+    
+    /* Time remaining styles */
+    .time-remaining {
+        background: #fef3c7;
+        border-radius: 1rem;
+        padding: 12px;
+        margin: 16px 0;
+        text-align: center;
+    }
+    .time-remaining-label {
+        font-size: 11px;
+        color: #d97706;
+        text-transform: uppercase;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    .time-remaining-value {
+        font-size: 24px;
+        font-weight: 800;
+        color: #ea580c;
+    }
+    .time-remaining-unit {
+        font-size: 12px;
+        color: #d97706;
+    }
+    .time-expired {
+        background: #fee2e2;
+        color: #dc2626;
     }
 
     /* Formulaire publication */
@@ -660,10 +689,11 @@
         bottom: 30px;
         left: 50%;
         transform: translateX(-50%) translateY(100px);
-        background: #f97316;
-        color: white;
+        background: #fefce8;
+        border: 1px solid #fde68a;
+        border-radius: 1rem;
+        color: #1b1b19;
         padding: 12px 24px;
-        border-radius: 50px;
         box-shadow: 0 10px 40px rgba(249, 115, 22, 0.4);
         z-index: 2000;
         display: flex;
@@ -678,6 +708,15 @@
     .toast-notification.show {
         transform: translateX(-50%) translateY(0);
         opacity: 1;
+    }
+    .toast-notification::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background: #f97316;
     }
 
     /* Three dots menu */
@@ -1024,20 +1063,31 @@
 
         {{-- GRILLE 2 COLONNES : DÉFI + PUBLICATION --}}
         <div class="two-col-grid">
-            {{-- DÉFI IA --}}
+            {{-- DÉFI CUISINE (anciennement IA) --}}
             @if(isset($aiChallenge) && $aiChallenge)
-            <div class="ia-challenge-card">
+            @php
+                // Calcul du temps restant pour le défi de 7 jours
+                $createdAt = \Carbon\Carbon::parse($aiChallenge->created_at);
+                $endDate = $createdAt->copy()->addDays($aiChallenge->duration ?? 7);
+                $now = \Carbon\Carbon::now();
+                $timeRemaining = $now->diff($endDate);
+                $isExpired = $now->gt($endDate);
+                $daysRemaining = $timeRemaining->days;
+                $hoursRemaining = $timeRemaining->h;
+                $minutesRemaining = $timeRemaining->i;
+            @endphp
+            <div class="challenge-card">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                        <i data-lucide="bot" class="w-6 h-6 text-orange-500"></i>
+                        <i data-lucide="chef-hat" class="w-6 h-6 text-orange-500"></i>
                     </div>
                     <div>
                         <div class="flex items-center gap-2 flex-wrap">
                             <span class="bg-orange-100 text-orange-600 text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                                <i data-lucide="zap" class="w-3 h-3"></i> DÉFI IA
+                                <i data-lucide="zap" class="w-3 h-3"></i> DÉFI CUISINE
                             </span>
                             <span class="bg-gray-100 text-gray-500 text-[10px] px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                                <i data-lucide="clock" class="w-3 h-3"></i> {{ $aiChallenge->duration }}j
+                                <i data-lucide="clock" class="w-3 h-3"></i> {{ $aiChallenge->duration ?? 7 }}j
                             </span>
                         </div>
                         <h3 class="font-bold text-gray-800 text-base mt-1">{{ $aiChallenge->title }}</h3>
@@ -1045,6 +1095,30 @@
                 </div>
                 
                 <p class="text-gray-600 text-sm leading-relaxed mb-4">{{ $aiChallenge->description }}</p>
+                
+                {{-- AFFICHAGE DU TEMPS RESTANT --}}
+                <div class="time-remaining {{ $isExpired ? 'time-expired' : '' }}">
+                    <div class="time-remaining-label">
+                        <i data-lucide="hourglass" class="w-3 h-3 inline mr-1"></i>
+                        {{ $isExpired ? 'DÉFI TERMINÉ' : 'TEMPS RESTANT' }}
+                    </div>
+                    @if(!$isExpired)
+                        <div>
+                            <span class="time-remaining-value">{{ $daysRemaining }}</span>
+                            <span class="time-remaining-unit">j</span>
+                            @if($hoursRemaining > 0 || $minutesRemaining > 0)
+                                <span class="time-remaining-value"> {{ $hoursRemaining }}</span>
+                                <span class="time-remaining-unit">h</span>
+                            @endif
+                            @if($minutesRemaining > 0 && $daysRemaining == 0)
+                                <span class="time-remaining-value"> {{ $minutesRemaining }}</span>
+                                <span class="time-remaining-unit">min</span>
+                            @endif
+                        </div>
+                    @else
+                        <div class="text-red-600 text-sm font-semibold">Ce défi est terminé</div>
+                    @endif
+                </div>
                 
                 @if($aiChallenge->ingredients)
                 <div class="bg-orange-50 rounded-xl p-3 mb-4">
@@ -1061,8 +1135,8 @@
                 </div>
                 @endif
                 
-                <button onclick="openChallengePostModal({{ json_encode($aiChallenge->ingredients) }})" class="w-full btn-orange flex items-center justify-center gap-2">
-                    <i data-lucide="award" class="w-4 h-4"></i> Participer au défi
+                <button onclick="openChallengePostModal({{ json_encode($aiChallenge->ingredients) }})" class="w-full btn-orange flex items-center justify-center gap-2" {{ $isExpired ? 'disabled' : '' }}>
+                    <i data-lucide="award" class="w-4 h-4"></i> {{ $isExpired ? 'Défi terminé' : 'Participer au défi' }}
                 </button>
             </div>
             @endif
@@ -1504,7 +1578,7 @@
 
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>
-//  VARIABLES GLOBALES
+// ============ VARIABLES GLOBALES ============
 let editingPostId = null;
 let editingPostHasImage = false;
 let currentPostImageFile = null;
@@ -1513,7 +1587,7 @@ let currentIngredients = [];
 let alpineApp = null;
 let activeGroupMenu = null;
 
-//  FONCTIONS UTILITAIRES
+// ============ FONCTIONS UTILITAIRES ============
 function showToast(message, isSuccess = true, icon = 'party-popper') {
     const toast = document.getElementById('toastNotification');
     const toastMessage = document.getElementById('toastMessage');
@@ -1523,9 +1597,9 @@ function showToast(message, isSuccess = true, icon = 'party-popper') {
     toastIcon.setAttribute('data-lucide', icon);
     
     if (isSuccess) {
-        toast.style.background = '#f97316';
+        toast.style.background = '#fefce8;';
     } else {
-        toast.style.background = '#ef4444';
+        toast.style.background = '#e45959';
     }
     
     toast.classList.add('show');
@@ -1613,7 +1687,7 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// STATS MODALS 
+// ============ STATS MODALS ============
 function openStatsModal(type, value) {
     const app = getAlpineApp();
     if (app) {
@@ -1638,7 +1712,7 @@ function openStatsModal(type, value) {
     }
 }
 
-// GESTION DES POSTS =
+// ============ GESTION DES POSTS ============
 function selectPostType(type) {
     const typeRealisation = document.getElementById('typeRealisation');
     const typeQuestion = document.getElementById('typeQuestion');
@@ -1727,14 +1801,12 @@ function submitPost() {
     });
 }
 
-// LIKE DYNAMIQUE RAPIDE 
+// ============ LIKE DYNAMIQUE RAPIDE ============
 function likePost(postId, btn) {
-    // Récupérer l'état actuel
     const isLiked = btn.classList.contains('like-btn-active');
     const likesSpan = document.getElementById(`likes-${postId}`);
     let currentLikes = parseInt(likesSpan.innerText);
     
-    // Mise à jour UI instantanée (optimiste)
     if (isLiked) {
         btn.classList.remove('like-btn-active');
         currentLikes--;
@@ -1742,7 +1814,6 @@ function likePost(postId, btn) {
         if (heartIcon) {
             heartIcon.style.color = '';
         }
-        showToast('Vous n\'aimez plus cette publication', false, 'heart-off');
     } else {
         btn.classList.add('like-btn-active');
         currentLikes++;
@@ -1752,16 +1823,11 @@ function likePost(postId, btn) {
             heartIcon.classList.add('like-animation');
             setTimeout(() => heartIcon.classList.remove('like-animation'), 300);
         }
-        showToast('Vous avez aimé cette publication !', true, 'heart');
     }
     
-    // Mettre à jour l'affichage
     likesSpan.innerText = currentLikes;
-    
-    // Désactiver temporairement le bouton pour éviter les doubles clics
     btn.disabled = true;
     
-    // Envoyer la requête au serveur
     fetch(`/community/like/${postId}`, {
         method: 'POST',
         headers: { 
@@ -1772,17 +1838,12 @@ function likePost(postId, btn) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Synchroniser avec la valeur réelle du serveur
             likesSpan.innerText = data.likes;
-            
-            // Mettre à jour le state Alpine
             const postCard = btn.closest('.post-card');
             if (postCard && postCard.__x) {
                 postCard.__x.$data.userLiked = data.liked;
                 postCard.__x.$data.likesCount = data.likes;
             }
-            
-            // S'assurer que le style est correct
             if (data.liked) {
                 btn.classList.add('like-btn-active');
                 const heartIcon = btn.querySelector('i');
@@ -1793,7 +1854,6 @@ function likePost(postId, btn) {
                 if (heartIcon) heartIcon.style.color = '';
             }
         } else {
-            // En cas d'erreur, annuler les changements
             if (isLiked) {
                 btn.classList.add('like-btn-active');
                 likesSpan.innerText = currentLikes + 1;
@@ -1801,14 +1861,12 @@ function likePost(postId, btn) {
                 btn.classList.remove('like-btn-active');
                 likesSpan.innerText = currentLikes - 1;
             }
-            showToast('Erreur lors du like', false, 'alert-circle');
         }
         btn.disabled = false;
         setTimeout(() => initLucide(), 100);
     })
     .catch((error) => {
         console.error('Erreur:', error);
-        // Annuler les changements en cas d'erreur
         if (isLiked) {
             btn.classList.add('like-btn-active');
             likesSpan.innerText = currentLikes + 1;
@@ -1817,7 +1875,6 @@ function likePost(postId, btn) {
             likesSpan.innerText = currentLikes - 1;
         }
         btn.disabled = false;
-        showToast('Erreur lors du like', false, 'alert-circle');
     });
 }
 
@@ -1899,11 +1956,11 @@ function sharePost(postId) {
     const postCard = document.querySelector(`.post-card:has(#likes-${postId})`);
     if (postCard) {
         const content = postCard.querySelector('p.text-gray-700')?.innerText || '';
-        const shareText = `🍽️ ${content}\n\nPartagé depuis OuraTable !`;
+        const shareText = `🍽️ ${content}\n\nPartagé depuis Le Fil des Gourmets !`;
         
         if (navigator.share) {
             navigator.share({
-                title: 'OuraTable| L'assiette ouverte',
+                title: 'Le Fil des Gourmets',
                 text: shareText,
                 url: window.location.href
             }).catch(() => {
@@ -1922,7 +1979,7 @@ function copyToClipboard(text) {
     showToast('Lien copié dans le presse-papier !', true, 'clipboard');
 }
 
-//  GESTION DES COMMENTAIRES (INLINE EDIT)
+// ============ GESTION DES COMMENTAIRES (INLINE EDIT) ============
 function editCommentInline(commentId) {
     const commentText = document.getElementById(`comment-text-${commentId}`);
     const editForm = document.getElementById(`comment-edit-${commentId}`);
@@ -2105,7 +2162,7 @@ function deletePost(postId) {
     .catch(() => showToast('Erreur lors de la suppression', false, 'alert-circle'));
 }
 
-//  DÉFI IA 
+// ============ DÉFI CUISINE ============
 function previewChallengeImage(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
@@ -2225,7 +2282,7 @@ function sendChallengePost() {
     });
 }
 
-//  GROUPES 
+// ============ GROUPES ============
 function toggleGroupMenu(event, groupId) {
     event.stopPropagation();
     const menu = document.getElementById(`groupMenu-${groupId}`);
@@ -2336,7 +2393,7 @@ function leaveGroup(groupId) {
     });
 }
 
-//  ALPINE JS 
+// ============ ALPINE JS ============
 function app() {
     return {
         activeFilter: 'all',
@@ -2393,7 +2450,7 @@ function app() {
     };
 }
 
-//  MESSAGERIE 
+// ============ MESSAGERIE ============
 let messengerState = {
     isOpen: false,
     currentTab: 'conversations',
@@ -2691,7 +2748,7 @@ function createMessengerUI() {
     setTimeout(() => { initLucide(); refreshConversations(); }, 100);
 }
 
-//  INITIALISATION 
+// ============ INITIALISATION ============
 document.addEventListener('DOMContentLoaded', function() {
     createMessengerUI();
     initLucide();

@@ -218,8 +218,8 @@
                                 {{ Auth::user()->name ?? 'Mon Compte' }}
                             </p>
                         </div>
-                        <a href="/profile" class="flex items-center gap-3 px-5 py-3 text-sm font-bold text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-all">
-                            <i data-lucide="user" class="w-4 h-4"></i> Mon Profil
+                        <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-orange-50">
+                            <i data-lucide="user" class="w-4 h-4 inline mr-2"></i> Mon profil
                         </a>
                         <a href="/mes-recettes" class="flex items-center gap-3 px-5 py-3 text-sm font-bold text-gray-600 hover:bg-orange-50 hover:text-orange-600 transition-all">
                             <i data-lucide="heart" class="w-4 h-4"></i> Coups de cœur

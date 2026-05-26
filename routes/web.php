@@ -4,7 +4,10 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RecetteController;
 use App\Http\Controllers\CommunityController;
+use App\Http\Controllers\ProfileController; 
+use App\Http\Controllers\VerificationController;
 
+// Routes publiques
 Route::get('/', [RecetteController::class, 'index']);
 
 Route::get('/login', function () {
@@ -13,14 +16,25 @@ Route::get('/login', function () {
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout.get');
 
-Route::get('/UserHome', [RecetteController::class, 'userIndex'])->middleware('auth')->name('user.home');
-Route::post('/recettes/{id}/like', [RecetteController::class, 'like'])->middleware('auth');
+// Routes de vérification email
+Route::get('/email/verify', [VerificationController::class, 'show'])->name('verification.notice');
+Route::get('/email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
+Route::post('/email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 
-Route::get('/community', [CommunityController::class, 'index'])->name('community.public');
-Route::get('/UserCommunity', [CommunityController::class, 'userCommunity'])->middleware('auth')->name('community.user');
-
+// Routes protégées par authentification
 Route::middleware(['auth'])->group(function () {
+    Route::get('/UserHome', [RecetteController::class, 'userIndex'])->name('user.home');
+    Route::post('/recettes/{id}/like', [RecetteController::class, 'like']);
+});
+
+// Routes protégées par authentification ET vérification email
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/community', [CommunityController::class, 'index'])->name('community.public');
+    Route::get('/UserCommunity', [CommunityController::class, 'userCommunity'])->name('community.user');
+
     Route::post('/community/post', [CommunityController::class, 'store']);
     Route::post('/community/comment', [CommunityController::class, 'comment']);
     Route::post('/community/like/{id}', [CommunityController::class, 'like']);
@@ -29,6 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/community/comment/{id}', [CommunityController::class, 'updateComment']);
     Route::delete('/community/comment/{id}', [CommunityController::class, 'deleteComment']);
     
+    // Routes pour la messagerie
     Route::post('/community/start-conversation', [CommunityController::class, 'startConversation']);
     Route::get('/community/messages/{conversationId}', [CommunityController::class, 'getMessages']);
     Route::post('/community/send-message', [CommunityController::class, 'sendMessage']);
@@ -36,6 +51,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/community/mark-as-read/{conversationId}', [CommunityController::class, 'markAsRead']);
     Route::get('/community/users', [CommunityController::class, 'getUsers']);
     
+    // Routes pour les groupes
     Route::post('/community/join-group/{groupId}', [CommunityController::class, 'joinGroup']);
     Route::post('/community/leave-group/{groupId}', [CommunityController::class, 'leaveGroup']);
     Route::get('/community/group-messages/{groupId}', [CommunityController::class, 'getGroupMessages']);
@@ -48,4 +64,10 @@ Route::middleware(['auth'])->group(function () {
     // Routes pour les posts (modification et suppression)
     Route::put('/community/post/{id}', [CommunityController::class, 'updatePost']);
     Route::delete('/community/post/{id}', [CommunityController::class, 'deletePost']);
+
+    // Page mon profil
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
+    Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload-avatar');
 });
