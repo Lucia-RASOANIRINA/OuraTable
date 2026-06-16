@@ -4,16 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ingredient extends Model
 {
     use HasFactory;
 
-     // Indiquez les colonnes que l'on peut remplir
-    protected $fillable = ['recette_id', 'nom', 'quantite'];
+    // Définir les champs remplissables
+    protected $fillable = [
+        'recette_id',
+        'nom',
+        'quantite'
+    ];
 
-    // Relation inverse (optionnel mais recommandé)
-    public function recette()
+    // Relation avec Recette
+    public function recette(): BelongsTo
     {
         return $this->belongsTo(Recette::class);
     }

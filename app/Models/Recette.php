@@ -11,19 +11,42 @@ class Recette extends Model
 {
     use HasFactory;
 
-    // relation recette -> utilisateur
+    // Définir les champs remplissables
+    protected $fillable = [
+        'user_id',
+        'titre',
+        'description',
+        'instructions',
+        'image_path'
+    ];
+
+    // Relation avec User
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    // Relation avec Ingredients
     public function ingredients(): HasMany
     {
         return $this->hasMany(Ingredient::class);
     }
 
+    // Relation avec Likes
     public function likes(): HasMany
     {
         return $this->hasMany(Like::class);
+    }
+
+    // Compter les likes
+    public function likesCount()
+    {
+        return $this->likes()->count();
+    }
+
+    // Vérifier si l'utilisateur a liké
+    public function isLikedByUser($userId)
+    {
+        return $this->likes()->where('user_id', $userId)->exists();
     }
 }

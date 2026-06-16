@@ -6,6 +6,7 @@ use App\Http\Controllers\RecetteController;
 use App\Http\Controllers\CommunityController;
 use App\Http\Controllers\ProfileController; 
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\UserRecetteController;
 
 // Routes publiques
 Route::get('/', [RecetteController::class, 'index']);
@@ -39,11 +40,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/community/comment', [CommunityController::class, 'comment']);
     Route::post('/community/like/{id}', [CommunityController::class, 'like']);
     
-    // Routes pour les commentaires (modification et suppression)
     Route::put('/community/comment/{id}', [CommunityController::class, 'updateComment']);
     Route::delete('/community/comment/{id}', [CommunityController::class, 'deleteComment']);
     
-    // Routes pour la messagerie
     Route::post('/community/start-conversation', [CommunityController::class, 'startConversation']);
     Route::get('/community/messages/{conversationId}', [CommunityController::class, 'getMessages']);
     Route::post('/community/send-message', [CommunityController::class, 'sendMessage']);
@@ -51,7 +50,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/community/mark-as-read/{conversationId}', [CommunityController::class, 'markAsRead']);
     Route::get('/community/users', [CommunityController::class, 'getUsers']);
     
-    // Routes pour les groupes
     Route::post('/community/join-group/{groupId}', [CommunityController::class, 'joinGroup']);
     Route::post('/community/leave-group/{groupId}', [CommunityController::class, 'leaveGroup']);
     Route::get('/community/group-messages/{groupId}', [CommunityController::class, 'getGroupMessages']);
@@ -61,13 +59,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/community/start-group-conversation/{groupId}', [CommunityController::class, 'startGroupConversation']);
     Route::post('/community/generate-ai-challenge', [CommunityController::class, 'generateNewAiChallenge']);
 
-    // Routes pour les posts (modification et suppression)
     Route::put('/community/post/{id}', [CommunityController::class, 'updatePost']);
     Route::delete('/community/post/{id}', [CommunityController::class, 'deletePost']);
 
-    // Page mon profil
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
     Route::post('/profile/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.upload-avatar');
+
+    // Routes pour les recettes utilisateur
+    Route::get('/mes-recettes', [UserRecetteController::class, 'index'])->name('user.recettes');
+    Route::post('/mes-recettes', [UserRecetteController::class, 'store'])->name('user.recettes.store');
+    Route::get('/mes-recettes/{id}', [UserRecetteController::class, 'show'])->name('user.recettes.show');
+    Route::put('/mes-recettes/{id}', [UserRecetteController::class, 'update'])->name('user.recettes.update');
+    Route::delete('/mes-recettes/{id}', [UserRecetteController::class, 'destroy'])->name('user.recettes.destroy');
+
+    Route::get('/recettes/{id}', [RecetteController::class, 'show'])->name('recettes.show');
 });
