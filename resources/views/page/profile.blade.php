@@ -37,8 +37,14 @@
         border: 4px solid white;
         box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
         transition: all 0.3s ease;
+        cursor: pointer;
     }
-    .profile-avatar:hover { transform: scale(1.02); }
+    .profile-avatar:hover { transform: scale(1.05); }
+
+    .avatar-container {
+        position: relative;
+        display: inline-block;
+    }
 
     .avatar-overlay {
         position: absolute;
@@ -51,8 +57,344 @@
         transition: all 0.3s;
         border: 3px solid white;
         box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        z-index: 10;
     }
     .avatar-overlay:hover { background: #ea580c; transform: scale(1.1); }
+
+    /* MODAL AVATAR */
+    .modal-avatar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(8px);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    
+    .modal-avatar-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    
+    .modal-avatar-content {
+        background: white;
+        border-radius: 2rem;
+        max-width: 600px;
+        width: 100%;
+        max-height: 95vh;
+        display: flex;
+        flex-direction: column;
+        animation: modalSlideIn 0.3s ease-out;
+        position: relative;
+        overflow: hidden;
+        transform: scale(0.95);
+        transition: transform 0.3s ease;
+    }
+    
+    .modal-avatar-overlay.active .modal-avatar-content {
+        transform: scale(1);
+    }
+    
+    .modal-avatar-content .modal-scroll-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        max-height: calc(95vh - 70px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .modal-avatar-content .modal-scroll-area::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .modal-avatar-content .modal-scroll-area::-webkit-scrollbar-track {
+        background: #f3f4f6;
+        border-radius: 10px;
+    }
+    
+    .modal-avatar-content .modal-scroll-area::-webkit-scrollbar-thumb {
+        background: #f97316;
+        border-radius: 10px;
+    }
+    
+    .modal-avatar-content .modal-scroll-area::-webkit-scrollbar-thumb:hover {
+        background: #ea580c;
+    }
+    
+    .modal-avatar-content .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2rem 0.5rem 2rem;
+        flex-shrink: 0;
+        border-bottom: 1px solid #f3f4f6;
+        background: white;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .modal-avatar-content .modal-header-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .modal-avatar-content .modal-header-title .brand {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+    
+    .modal-avatar-content .modal-header-title .brand .oura {
+        color: #1f2937;
+    }
+    
+    .modal-avatar-content .modal-header-title .brand .table {
+        color: #f97316;
+    }
+    
+    .modal-avatar-content .modal-header-title .subtitle {
+        font-size: 0.6rem;
+        font-weight: 600;
+        color: #9ca3af;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-left: 0.5rem;
+    }
+    
+    .modal-avatar-content .modal-close {
+        background: #f3f4f6;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+    
+    .modal-avatar-content .modal-close:hover {
+        background: #ef4444;
+        color: white;
+        transform: rotate(90deg);
+    }
+    
+    .modal-avatar-content .modal-close svg {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .avatar-modal-image {
+        width: 100%;
+        max-width: 400px;
+        border-radius: 1.5rem;
+        object-fit: contain;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    .avatar-modal-actions {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+        max-width: 400px;
+        margin-top: 0.5rem;
+    }
+    
+    .avatar-modal-actions .btn-danger {
+        flex: 1;
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 40px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .avatar-modal-actions .btn-danger:hover {
+        background: #dc2626;
+        transform: translateY(-2px);
+    }
+    
+    .avatar-modal-actions .btn-secondary {
+        flex: 1;
+        background: #6b7280;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 40px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .avatar-modal-actions .btn-secondary:hover {
+        background: #4b5563;
+        transform: translateY(-2px);
+    }
+    
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95) translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+    }
+
+    /* MODAL STYLES */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(8px);
+        z-index: 999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+    
+    .modal-overlay.active {
+        display: flex;
+    }
+    
+    .modal-content {
+        background: white;
+        border-radius: 2rem;
+        max-width: 500px;
+        width: 100%;
+        max-height: 95vh;
+        display: flex;
+        flex-direction: column;
+        animation: modalSlideIn 0.3s ease-out;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .modal-scroll-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 2rem;
+        max-height: calc(95vh - 70px);
+    }
+    
+    .modal-scroll-area::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .modal-scroll-area::-webkit-scrollbar-track {
+        background: #f3f4f6;
+        border-radius: 10px;
+    }
+    
+    .modal-scroll-area::-webkit-scrollbar-thumb {
+        background: #f97316;
+        border-radius: 10px;
+    }
+    
+    .modal-scroll-area::-webkit-scrollbar-thumb:hover {
+        background: #ea580c;
+    }
+    
+    .modal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2rem 0.5rem 2rem;
+        flex-shrink: 0;
+        border-bottom: 1px solid #f3f4f6;
+        background: white;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+    
+    .modal-header-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .modal-header-title .brand {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: -0.05em;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+    
+    .modal-header-title .brand .oura {
+        color: #1f2937;
+    }
+    
+    .modal-header-title .brand .table {
+        color: #f97316;
+    }
+    
+    .modal-header-title .subtitle {
+        font-size: 0.6rem;
+        font-weight: 600;
+        color: #9ca3af;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        margin-left: 0.5rem;
+    }
+    
+    .modal-close {
+        background: #f3f4f6;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+    
+    .modal-close:hover {
+        background: #ef4444;
+        color: white;
+        transform: rotate(90deg);
+    }
+    
+    .modal-close svg {
+        width: 20px;
+        height: 20px;
+    }
 
     /* Cartes statistiques */
     .stat-card {
@@ -126,6 +468,7 @@
         display: flex;
         padding: 14px 0;
         border-bottom: 1px solid #f3f4f6;
+        align-items: center;
     }
     .info-row:last-child { border-bottom: none; }
     .info-label {
@@ -205,26 +548,6 @@
     }
     .btn-outline:hover { background: #fff7ed; transform: translateY(-2px); }
 
-    /* Modals */
-    .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.5);
-        backdrop-filter: blur(4px);
-        z-index: 1000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .modal-content {
-        background: white;
-        border-radius: 1.5rem;
-        max-width: 500px;
-        width: 90%;
-        animation: modalPop 0.3s ease;
-        padding: 1.5rem;
-    }
-
     /* Cartes coup de foudre */
     .foudre-card {
         background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
@@ -241,18 +564,6 @@
     }
     .foudre-card-liked {
         background: linear-gradient(135deg, #fef3c7 0%, #fff 100%);
-    }
-    .like-icon {
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-    .like-icon:hover {
-        transform: scale(1.1);
-    }
-    .liked {
-        color: #ef4444;
-        fill: #ef4444;
-        animation: heartBeat 0.3s ease;
     }
 
     /* Activités */
@@ -275,7 +586,7 @@
         color: white;
         padding: 12px 24px;
         border-radius: 50px;
-        z-index: 1100;
+        z-index: 99999;
         animation: slideInRight 0.3s ease;
         box-shadow: 0 10px 25px -5px rgba(0,0,0,0.15);
         display: flex;
@@ -354,28 +665,48 @@
         background: #f97316;
         border-radius: 10px;
     }
+
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .info-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid #f3f4f6;
+    }
+    .info-actions .btn-outline {
+        flex: 1;
+        justify-content: center;
+    }
 </style>
 
 <div class="min-h-screen bg-gray-50 py-8"
      x-data="{ 
         activeTab: 'infos',
-        showEditModal: false,
-        showPasswordModal: false,
-        showPostModal: false,
-        selectedPost: null,
         loading: false,
+        avatarLoading: false,
+        avatarDeleting: false,
         showToast: false,
         toastMessage: '',
         toastType: 'success',
+        hasAvatar: {{ $user->avatar ? 'true' : 'false' }},
+        avatarUrl: '{{ $user->avatar ? asset($user->avatar) : '' }}',
+        showAvatarModal: false,
         formData: {
-            name: '{{ old('name', $user->name) }}',
+            name: '{{ $user->name }}',
             phone: '{{ $phoneData['number'] ?? '' }}',
             phone_country_code: '{{ $phoneData['country_code'] ?? '+261' }}',
-            email: '{{ old('email', $user->email) }}',
-            bio: '{{ old('bio', $user->bio) }}',
-            city: '{{ old('city', $user->city) }}',
-            birth_date: '{{ old('birth_date', $user->birth_date) }}',
-            specialty: '{{ old('specialty', $user->specialty) }}'
+            email: '{{ $user->email }}',
+            bio: '{{ $user->bio ?? '' }}',
+            city: '{{ $user->city ?? '' }}',
+            birth_date: '{{ $user->birth_date ?? '' }}',
+            specialty: '{{ $user->specialty ?? '' }}'
         },
         passwordForm: {
             current_password: '',
@@ -404,6 +735,7 @@
         saveProfile() {
             if (this.errors.phone) return;
             this.loading = true;
+            
             fetch('{{ route("profile.update") }}', {
                 method: 'POST',
                 headers: {
@@ -414,16 +746,17 @@
             })
             .then(response => response.json())
             .then(data => {
+                this.loading = false;
                 if (data.success) {
-                    this.showEditModal = false;
+                    closeEditModal();
                     this.showMessage(data.message, 'success');
                     setTimeout(() => location.reload(), 1500);
                 } else {
-                    this.showMessage(data.message, 'error');
+                    this.showMessage(data.message || 'Erreur lors de la mise à jour', 'error');
                 }
-                this.loading = false;
             })
             .catch(error => {
+                console.error('Erreur:', error);
                 this.loading = false;
                 this.showMessage('Erreur lors de la mise à jour', 'error');
             });
@@ -444,27 +777,34 @@
             }
             
             this.loading = true;
+            
             fetch('{{ route("profile.change-password") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify(this.passwordForm)
+                body: JSON.stringify({
+                    current_password: this.passwordForm.current_password,
+                    new_password: this.passwordForm.new_password,
+                    new_password_confirmation: this.passwordForm.new_password_confirmation
+                })
             })
             .then(response => response.json())
             .then(data => {
+                this.loading = false;
                 if (data.success) {
-                    this.showPasswordModal = false;
+                    closePasswordModal();
                     this.passwordForm = { current_password: '', new_password: '', new_password_confirmation: '' };
                     this.passwordErrors = {};
                     this.showMessage(data.message, 'success');
+                    setTimeout(() => location.reload(), 1500);
                 } else {
-                    this.showMessage(data.message, 'error');
+                    this.showMessage(data.message || 'Erreur lors du changement de mot de passe', 'error');
                 }
-                this.loading = false;
             })
             .catch(error => {
+                console.error('Erreur:', error);
                 this.loading = false;
                 this.showMessage('Erreur lors du changement de mot de passe', 'error');
             });
@@ -472,6 +812,8 @@
         
         uploadAvatar(file) {
             if (!file) return;
+            this.avatarLoading = true;
+            
             let formData = new FormData();
             formData.append('avatar', file);
             formData.append('_token', '{{ csrf_token() }}');
@@ -482,28 +824,75 @@
             })
             .then(response => response.json())
             .then(data => {
+                this.avatarLoading = false;
                 if (data.success) {
-                    document.querySelector('.profile-avatar').src = data.avatar + '?t=' + Date.now();
+                    this.avatarUrl = data.avatar + '?t=' + Date.now();
+                    this.hasAvatar = true;
+                    document.querySelector('.profile-avatar').src = this.avatarUrl;
                     this.showMessage(data.message, 'success');
+                    this.showAvatarModal = false;
+                } else {
+                    this.showMessage(data.message || 'Erreur lors de l\'upload', 'error');
                 }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                this.avatarLoading = false;
+                this.showMessage('Erreur lors de l\'upload', 'error');
+            });
+        },
+        
+        deleteAvatar() {
+            if (!confirm('Voulez-vous vraiment supprimer votre avatar ?')) return;
+            
+            this.avatarDeleting = true;
+            fetch('{{ route("profile.delete-avatar") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erreur serveur');
+                }
+                return response.json();
+            })
+            .then(data => {
+                this.avatarDeleting = false;
+                if (data.success) {
+                    this.hasAvatar = false;
+                    this.avatarUrl = '';
+                    document.querySelector('.profile-avatar').src = 'https://ui-avatars.com/api/?background=f97316&color=fff&bold=true&size=140&name={{ urlencode($user->name) }}';
+                    this.showMessage(data.message, 'success');
+                    this.showAvatarModal = false;
+                } else {
+                    this.showMessage(data.message || 'Erreur lors de la suppression', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                this.avatarDeleting = false;
+                this.showMessage('Erreur lors de la suppression de l\'avatar', 'error');
             });
         },
         
         showMessage(message, type) {
             this.toastMessage = message;
-            this.toastType = type;
+            this.toastType = type || 'success';
             this.showToast = true;
             setTimeout(() => { this.showToast = false; }, 3000);
         },
         
-        viewPostDetails(post) {
-            this.selectedPost = post;
-            this.showPostModal = true;
+        openAvatarModal() {
+            this.showAvatarModal = true;
+            document.body.style.overflow = 'hidden';
         },
         
-        closePostModal() {
-            this.showPostModal = false;
-            this.selectedPost = null;
+        closeAvatarModal() {
+            this.showAvatarModal = false;
+            document.body.style.overflow = 'auto';
         }
      }">
     
@@ -514,9 +903,12 @@
             <div class="bg-orange-500 h-24"></div>
             <div class="relative px-6 pb-6">
                 <div class="flex flex-col md:flex-row items-center md:items-end gap-6 -mt-16">
-                    <div class="relative">
+                    <div class="avatar-container">
                         <img src="{{ $user->avatar ? asset($user->avatar) : 'https://ui-avatars.com/api/?background=f97316&color=fff&bold=true&size=140&name=' . urlencode($user->name) }}" 
-                             class="profile-avatar" alt="Avatar">
+                             class="profile-avatar" alt="Avatar" id="profileAvatar"
+                             @click="openAvatarModal()">
+                        
+                        <!-- Bouton d'upload d'avatar -->
                         <div class="avatar-overlay" onclick="document.getElementById('avatarInput').click()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
@@ -526,7 +918,7 @@
                         <form id="avatarForm" style="display: none;">
                             @csrf
                             <input type="file" name="avatar" id="avatarInput" accept="image/*" 
-                                   onchange="document.querySelector('[x-data]').__x.$data.uploadAvatar(this.files[0])">
+                                   onchange="uploadAvatarFile(this.files[0])">
                         </form>
                     </div>
                     
@@ -546,14 +938,14 @@
                     </div>
                     
                     <div class="flex gap-3">
-                        <button @click="showEditModal = true" class="btn-outline text-sm">
+                        <button onclick="openEditModal()" class="btn-outline text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M17 3l4 4-7 7H10v-4l7-7z"/>
                                 <path d="M4 20h16"/>
                             </svg>
                             Modifier
                         </button>
-                        <button @click="showPasswordModal = true" class="btn-outline text-sm">
+                        <button onclick="openPasswordModal()" class="btn-outline text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
                                 <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
@@ -574,28 +966,28 @@
                     <line x1="16" y1="13" x2="8" y2="13"/>
                     <line x1="16" y1="17" x2="8" y2="17"/>
                 </svg>
-                <div class="text-2xl font-bold text-gray-900">{{ $totalPosts }}</div>
+                <div class="text-2xl font-bold text-gray-900">{{ $totalPosts ?? 0 }}</div>
                 <div class="text-xs text-gray-500 mt-1">Publications</div>
             </div>
             <div class="stat-card">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-2">
                     <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
                 </svg>
-                <div class="text-2xl font-bold text-gray-900">{{ $totalComments }}</div>
+                <div class="text-2xl font-bold text-gray-900">{{ $totalComments ?? 0 }}</div>
                 <div class="text-xs text-gray-500 mt-1">Commentaires</div>
             </div>
             <div class="stat-card">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-2">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                 </svg>
-                <div class="text-2xl font-bold text-gray-900">{{ $totalLikes }}</div>
+                <div class="text-2xl font-bold text-gray-900">{{ $totalLikes ?? 0 }}</div>
                 <div class="text-xs text-gray-500 mt-1">J'aime donnés</div>
             </div>
             <div class="stat-card">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-2">
                     <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
                 </svg>
-                <div class="text-2xl font-bold text-gray-900">{{ $totalLikesReceived }}</div>
+                <div class="text-2xl font-bold text-gray-900">{{ $totalLikesReceived ?? 0 }}</div>
                 <div class="text-xs text-gray-500 mt-1">J'aime reçus</div>
             </div>
         </div>
@@ -631,7 +1023,7 @@
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                 </svg>
                 <h2 class="text-xl font-bold text-gray-800">Coup de foudre</h2>
-                <span class="text-sm text-gray-500">- Mes coups de cœur culinaires</span>
+                <span class="text-sm text-gray-500">- Mes coups de coeur culinaires</span>
             </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -647,7 +1039,7 @@
                     </div>
                     <div class="p-4">
                         @if(isset($lastLikedPost) && $lastLikedPost)
-                        <div class="foudre-card cursor-pointer" @click="viewPostDetails(@json($lastLikedPost))">
+                        <div class="foudre-card cursor-pointer" onclick="openPostModal(@json($lastLikedPost))">
                             @if($lastLikedPost->image)
                             <img src="{{ asset($lastLikedPost->image) }}" class="post-image" alt="Recette">
                             @endif
@@ -700,14 +1092,14 @@
                                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                                 <polyline points="22,6 12,13 2,6"/>
                             </svg>
-                            <h3 class="font-semibold text-gray-800">Mes coups de cœur</h3>
+                            <h3 class="font-semibold text-gray-800">Mes coups de coeur</h3>
                             <span class="text-xs text-gray-400">({{ isset($likedPosts) ? $likedPosts->count() : 0 }} recettes aimées)</span>
                         </div>
                     </div>
                     <div class="liked-posts-grid max-h-96 overflow-y-auto">
                         @if(isset($likedPosts) && $likedPosts->count() > 0)
                             @foreach($likedPosts as $like)
-                            <div class="foudre-card foudre-card-liked m-3 cursor-pointer" @click="viewPostDetails(@json($like->post))">
+                            <div class="foudre-card foudre-card-liked m-3 cursor-pointer" onclick="openPostModal(@json($like->post))">
                                 <div class="flex items-start gap-3">
                                     <div class="flex-shrink-0">
                                         @if($like->post && $like->post->image)
@@ -863,6 +1255,24 @@
                         <div class="info-value">{{ $user->created_at->format('d/m/Y') }}</div>
                     </div>
                 </div>
+
+                {{-- Actions dans l'onglet informations --}}
+                <div class="info-actions">
+                    <button onclick="openEditModal()" class="btn-outline">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 3l4 4-7 7H10v-4l7-7z"/>
+                            <path d="M4 20h16"/>
+                        </svg>
+                        Modifier le profil
+                    </button>
+                    <button onclick="openPasswordModal()" class="btn-outline">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        Changer le mot de passe
+                    </button>
+                </div>
             </div>
 
             {{-- Onglet Mes publications --}}
@@ -870,7 +1280,7 @@
                 @if(isset($recentPosts) && $recentPosts->count() > 0)
                     <div class="space-y-3">
                         @foreach($recentPosts as $post)
-                        <div class="post-card cursor-pointer" @click="viewPostDetails(@json($post))">
+                        <div class="post-card cursor-pointer" onclick="openPostModal(@json($post))">
                             @if($post->image)
                             <img src="{{ asset($post->image) }}" class="post-image" alt="Publication">
                             @endif
@@ -921,7 +1331,7 @@
                         </div>
                         @endforeach
                     </div>
-                    @if($totalPosts > 5)
+                    @if(($totalPosts ?? 0) > 5)
                     <div class="mt-4 text-center">
                         <a href="{{ route('community.user') }}" class="text-orange-500 hover:text-orange-600 text-sm">Voir toutes mes publications →</a>
                     </div>
@@ -971,216 +1381,208 @@
         </div>
     </div>
 
-    {{-- MODAL DÉTAIL PUBLICATION --}}
-    <div x-show="showPostModal" x-cloak class="modal-overlay" @click.away="closePostModal()">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                        <polyline points="14 2 14 8 20 8"/>
+    {{-- MODAL AVATAR --}}
+    <div class="modal-avatar-overlay" :class="showAvatarModal ? 'active' : ''" @click.away="closeAvatarModal()">
+        <div class="modal-avatar-content">
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <div class="brand">
+                        <span class="oura">OURA</span><span class="table">TABLE</span>
+                    </div>
+                    <div class="subtitle">PHOTO DE PROFIL</div>
+                </div>
+                <button class="modal-close" @click="closeAvatarModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
-                    Détail de la publication
-                </h3>
-                <button @click="closePostModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                </button>
             </div>
             
-            <template x-if="selectedPost">
-                <div>
-                    <template x-if="selectedPost.image">
-                        <img :src="'{{ asset('') }}' + selectedPost.image" class="w-full h-64 object-cover rounded-xl mb-4">
-                    </template>
+            <div class="modal-scroll-area">
+                <div style="width:100%;display:flex;flex-direction:column;align-items:center;">
+                    <img :src="hasAvatar ? avatarUrl : 'https://ui-avatars.com/api/?background=f97316&color=fff&bold=true&size=400&name={{ urlencode($user->name) }}'" 
+                         class="avatar-modal-image" 
+                         alt="Avatar">
                     
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="px-2 py-1 rounded-lg text-xs font-medium" 
-                              :class="{
-                                  'bg-blue-50 text-blue-700': selectedPost.type === 'question',
-                                  'bg-green-50 text-green-700': selectedPost.type === 'realisation',
-                                  'bg-purple-50 text-purple-700': selectedPost.type === 'defi'
-                              }">
-                            <span x-show="selectedPost.type === 'question'">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-1">
-                                    <circle cx="12" cy="12" r="10"/>
-                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
-                                </svg>
-                                Question
-                            </span>
-                            <span x-show="selectedPost.type === 'defi'">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-1">
-                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2z"/>
-                                </svg>
-                                Défi
-                            </span>
-                            <span x-show="selectedPost.type === 'realisation'">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="inline mr-1">
-                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                                    <circle cx="12" cy="13" r="4"/>
-                                </svg>
-                                Réalisation
-                            </span>
-                        </span>
-                        <span class="text-xs text-gray-400" x-text="new Date(selectedPost.created_at).toLocaleDateString('fr-FR')"></span>
-                    </div>
-                    
-                    <p class="text-gray-800 mb-4 leading-relaxed" x-text="selectedPost.content"></p>
-                    
-                    <div class="flex items-center gap-4 mb-4 pt-3 border-t border-gray-100">
-                        <div class="flex items-center gap-1 text-red-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
-                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    <div class="avatar-modal-actions">
+                        <button class="btn-danger" @click="deleteAvatar()" :disabled="avatarDeleting">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
                             </svg>
-                            <span class="text-sm font-medium" x-text="selectedPost.likes_count || 0"></span>
-                        </div>
-                        <div class="flex items-center gap-1 text-gray-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                            </svg>
-                            <span class="text-sm" x-text="selectedPost.comments_count || 0"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-gray-50 rounded-xl p-3">
-                        <p class="text-xs text-gray-500">
-                            Publié par <span class="font-medium text-orange-600" x-text="selectedPost.user?.name || 'Utilisateur'"></span>
-                        </p>
+                            Supprimer
+                        </button>
+                        <button class="btn-secondary" @click="closeAvatarModal()">Fermer</button>
                     </div>
                 </div>
-            </template>
-            
-            <div class="flex gap-3 pt-4 mt-2">
-                <button @click="closePostModal()" class="flex-1 bg-orange-500 text-white py-2 rounded-xl hover:bg-orange-600 transition">
-                    Fermer
+            </div>
+        </div>
+    </div>
+
+    {{-- MODAL DÉTAIL PUBLICATION --}}
+    <div id="postModal" class="modal-overlay" onclick="if(event.target === this) closePostModal()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <div class="brand">
+                        <span class="oura">OURA</span><span class="table">TABLE</span>
+                    </div>
+                    <div class="subtitle">DÉTAIL DE LA PUBLICATION</div>
+                </div>
+                <button class="modal-close" onclick="closePostModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
                 </button>
+            </div>
+            
+            <div class="modal-scroll-area">
+                <div id="postContent">
+                    <div class="flex items-center justify-center py-12">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     {{-- MODAL ÉDITION PROFIL --}}
-    <div x-show="showEditModal" x-cloak class="modal-overlay" @click.away="showEditModal = false">
+    <div id="editModal" class="modal-overlay" onclick="if(event.target === this) closeEditModal()">
         <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17 3l4 4-7 7H10v-4l7-7z"/>
-                        <path d="M4 20h16"/>
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <div class="brand">
+                        <span class="oura">OURA</span><span class="table">TABLE</span>
+                    </div>
+                    <div class="subtitle">MODIFIER LE PROFIL</div>
+                </div>
+                <button class="modal-close" onclick="closeEditModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
-                    Modifier le profil
-                </h3>
-                <button @click="showEditModal = false" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                </button>
             </div>
             
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
-                    <input type="text" x-model="formData.name" @input="formatName()" class="edit-field w-full" :class="errors.name ? 'error' : ''">
-                    <div class="error-message" x-text="errors.name"></div>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
-                    <div class="flex gap-2">
-                        <select x-model="formData.phone_country_code" class="country-select w-28">
-                            @foreach($countries as $code => $name)
-                            <option value="{{ $code }}">{{ $code }}</option>
-                            @endforeach
+            <div class="modal-scroll-area">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nom complet</label>
+                        <input type="text" x-model="formData.name" @input="formatName()" class="edit-field w-full" :class="errors.name ? 'error' : ''">
+                        <div class="error-message" x-text="errors.name"></div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                        <div class="flex gap-2">
+                            <select x-model="formData.phone_country_code" class="country-select w-28">
+                                @foreach($countries as $code => $name)
+                                <option value="{{ $code }}">{{ $code }}</option>
+                                @endforeach
+                            </select>
+                            <input type="tel" x-model="formData.phone" @input="validatePhone()" class="edit-field flex-1" :class="errors.phone ? 'error' : ''" placeholder="Numéro">
+                        </div>
+                        <div class="error-message" x-text="errors.phone"></div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" x-model="formData.email" class="edit-field w-full">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
+                            <input type="text" x-model="formData.city" class="edit-field w-full" placeholder="Votre ville">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
+                            <input type="date" x-model="formData.birth_date" class="edit-field w-full">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Spécialité culinaire</label>
+                        <select x-model="formData.specialty" class="edit-field w-full">
+                            <option value="">Sélectionnez une spécialité</option>
+                            <option value="Pâtisserie">Pâtisserie</option>
+                            <option value="Boulangerie">Boulangerie</option>
+                            <option value="Cuisine du Monde">Cuisine du Monde</option>
+                            <option value="Cuisine Italienne">Cuisine Italienne</option>
+                            <option value="Cuisine Asiatique">Cuisine Asiatique</option>
+                            <option value="Cuisine Africaine">Cuisine Africaine</option>
+                            <option value="Healthy">Healthy</option>
+                            <option value="Barbecue">Barbecue</option>
                         </select>
-                        <input type="tel" x-model="formData.phone" @input="validatePhone()" class="edit-field flex-1" :class="errors.phone ? 'error' : ''" placeholder="Numéro">
                     </div>
-                    <div class="error-message" x-text="errors.phone"></div>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <input type="email" x-model="formData.email" class="edit-field w-full">
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4">
+                    
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Ville</label>
-                        <input type="text" x-model="formData.city" class="edit-field w-full" placeholder="Votre ville">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+                        <textarea x-model="formData.bio" rows="3" class="edit-field w-full" placeholder="Parlez-nous de vous..."></textarea>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Date de naissance</label>
-                        <input type="date" x-model="formData.birth_date" class="edit-field w-full">
+                    
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" onclick="closeEditModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition">
+                            Annuler
+                        </button>
+                        <button type="button" @click="saveProfile()" class="flex-1 bg-orange-500 text-white py-2 rounded-xl hover:bg-orange-600 transition">
+                            Enregistrer
+                        </button>
                     </div>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Spécialité culinaire</label>
-                    <select x-model="formData.specialty" class="edit-field w-full">
-                        <option value="">Sélectionnez une spécialité</option>
-                        <option value="Pâtisserie">🍰 Pâtisserie</option>
-                        <option value="Boulangerie">🥖 Boulangerie</option>
-                        <option value="Cuisine du Monde">🌍 Cuisine du Monde</option>
-                        <option value="Cuisine Italienne">🍝 Cuisine Italienne</option>
-                        <option value="Cuisine Asiatique">🍜 Cuisine Asiatique</option>
-                        <option value="Cuisine Africaine">🌍 Cuisine Africaine</option>
-                        <option value="Healthy">🥗 Healthy</option>
-                        <option value="Barbecue">🥩 Barbecue</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Bio</label>
-                    <textarea x-model="formData.bio" rows="3" class="edit-field w-full" placeholder="Parlez-nous de vous..."></textarea>
-                </div>
-                
-                <div class="flex gap-3 pt-2">
-                    <button type="button" @click="showEditModal = false" class="flex-1 px-4 py-2 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition">
-                        Annuler
-                    </button>
-                    <button type="button" @click="saveProfile()" :disabled="loading" class="flex-1 bg-orange-500 text-white py-2 rounded-xl hover:bg-orange-600 transition">
-                        <span x-show="loading" class="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></span>
-                        <span x-show="!loading">Enregistrer</span>
-                    </button>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- MODAL CHANGEMENT DE MOT DE PASSE --}}
-    <div x-show="showPasswordModal" x-cloak class="modal-overlay" @click.away="showPasswordModal = false">
+    <div id="passwordModal" class="modal-overlay" onclick="if(event.target === this) closePasswordModal()">
         <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            <div class="modal-header">
+                <div class="modal-header-title">
+                    <div class="brand">
+                        <span class="oura">OURA</span><span class="table">TABLE</span>
+                    </div>
+                    <div class="subtitle">CHANGER LE MOT DE PASSE</div>
+                </div>
+                <button class="modal-close" onclick="closePasswordModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
-                    Changer le mot de passe
-                </h3>
-                <button @click="showPasswordModal = false" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                </button>
             </div>
             
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
-                    <input type="password" x-model="passwordForm.current_password" class="edit-field w-full">
-                    <div class="error-message" x-text="passwordErrors.current_password"></div>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
-                    <input type="password" x-model="passwordForm.new_password" class="edit-field w-full">
-                    <div class="error-message" x-text="passwordErrors.new_password"></div>
-                    <p class="text-xs text-gray-400 mt-1">Minimum 6 caractères</p>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe</label>
-                    <input type="password" x-model="passwordForm.new_password_confirmation" class="edit-field w-full">
-                    <div class="error-message" x-text="passwordErrors.new_password_confirmation"></div>
-                </div>
-                
-                <div class="flex gap-3 pt-2">
-                    <button type="button" @click="showPasswordModal = false" class="flex-1 px-4 py-2 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition">
-                        Annuler
-                    </button>
-                    <button type="button" @click="changePassword()" :disabled="loading" class="flex-1 bg-orange-500 text-white py-2 rounded-xl hover:bg-orange-600 transition">
-                        <span x-show="loading" class="inline-block animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></span>
-                        <span x-show="!loading">Changer</span>
-                    </button>
+            <div class="modal-scroll-area">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mot de passe actuel</label>
+                        <input type="password" x-model="passwordForm.current_password" class="edit-field w-full" placeholder="Entrez votre mot de passe actuel">
+                        <div class="error-message" x-text="passwordErrors.current_password"></div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nouveau mot de passe</label>
+                        <input type="password" x-model="passwordForm.new_password" class="edit-field w-full" placeholder="Minimum 6 caractères">
+                        <div class="error-message" x-text="passwordErrors.new_password"></div>
+                        <p class="text-xs text-gray-400 mt-1">Minimum 6 caractères</p>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirmer le mot de passe</label>
+                        <input type="password" x-model="passwordForm.new_password_confirmation" class="edit-field w-full" placeholder="Confirmez votre nouveau mot de passe">
+                        <div class="error-message" x-text="passwordErrors.new_password_confirmation"></div>
+                    </div>
+                    
+                    <div class="flex gap-3 pt-2">
+                        <button type="button" onclick="closePasswordModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition">
+                            Annuler
+                        </button>
+                        <button type="button" @click="changePassword()" class="flex-1 bg-orange-500 text-white py-2 rounded-xl hover:bg-orange-600 transition">
+                            Changer
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1199,12 +1601,177 @@
     </div>
 </div>
 
-<script src="https://unpkg.com/lucide@latest"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    });
+// Fonctions pour les modales
+function openEditModal() {
+    document.getElementById('editModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function openPasswordModal() {
+    document.getElementById('passwordModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePasswordModal() {
+    document.getElementById('passwordModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function openPostModal(postData) {
+    const modal = document.getElementById('postModal');
+    const content = document.getElementById('postContent');
+    
+    content.innerHTML = `
+        <div class="flex items-center justify-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+        </div>
+    `;
+    
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    if (postData && postData.id) {
+        displayPostContent(postData);
+    } else {
+        const id = typeof postData === 'number' ? postData : (postData?.id || 0);
+        fetch('/post/' + id)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayPostContent(data.post);
+                } else {
+                    content.innerHTML = `
+                        <div class="text-center py-12 text-gray-500">
+                            <p>Erreur lors du chargement de la publication</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                content.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <p>Erreur lors du chargement de la publication</p>
+                    </div>
+                `;
+            });
+    }
+}
+
+function displayPostContent(post) {
+    const content = document.getElementById('postContent');
+    
+    let imageHtml = '';
+    if (post.image) {
+        imageHtml = `
+            <div style="width:100%;border-radius:1.5rem;overflow:hidden;margin-bottom:1rem;">
+                <img src="{{ asset('') }}${post.image}" alt="Publication" style="width:100%;height:auto;max-height:400px;object-fit:contain;display:block;border-radius:1.5rem;">
+            </div>
+        `;
+    }
+    
+    let typeBadge = '';
+    let typeLabel = '';
+    if (post.type === 'question') {
+        typeBadge = 'background:#eff6ff;color:#1d4ed8;';
+        typeLabel = 'Question';
+    } else if (post.type === 'defi') {
+        typeBadge = 'background:#f3e8ff;color:#6b21a8;';
+        typeLabel = 'Défi';
+    } else {
+        typeBadge = 'background:#f0fdf4;color:#15803d;';
+        typeLabel = 'Réalisation';
+    }
+    
+    const userName = post.user?.name || 'Utilisateur';
+    const likesCount = post.likes_count || 0;
+    const commentsCount = post.comments_count || 0;
+    const dateStr = new Date(post.created_at).toLocaleDateString('fr-FR');
+    
+    content.innerHTML = `
+        ${imageHtml}
+        
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.75rem;">
+            <span style="padding:0.25rem 0.75rem;border-radius:0.75rem;font-size:0.75rem;font-weight:500;${typeBadge}">
+                ${typeLabel}
+            </span>
+            <span style="font-size:0.75rem;color:#9ca3af;">${dateStr}</span>
+        </div>
+        
+        <p style="color:#1f2937;margin-bottom:1rem;line-height:1.6;">${post.content}</p>
+        
+        <div style="display:flex;align-items:center;gap:1rem;margin-bottom:1rem;padding-top:0.75rem;border-top:1px solid #f3f4f6;">
+            <div style="display:flex;align-items:center;gap:0.25rem;color:#ef4444;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+                <span style="font-size:0.875rem;font-weight:500;">${likesCount}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.25rem;color:#6b7280;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                </svg>
+                <span style="font-size:0.875rem;">${commentsCount}</span>
+            </div>
+        </div>
+        
+        <div style="background:#f9fafb;border-radius:0.75rem;padding:0.75rem;">
+            <p style="font-size:0.75rem;color:#6b7280;">
+                Publié par <span style="font-weight:500;color:#f97316;">${userName}</span>
+            </p>
+        </div>
+    `;
+}
+
+function closePostModal() {
+    document.getElementById('postModal').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+// Fonctions pour l'avatar
+function uploadAvatarFile(file) {
+    if (!file) return;
+    
+    const app = document.querySelector('[x-data]');
+    if (app && app.__x) {
+        app.__x.$data.uploadAvatar(file);
+    } else {
+        const formData = new FormData();
+        formData.append('avatar', file);
+        formData.append('_token', '{{ csrf_token() }}');
+        
+        fetch('{{ route("profile.upload-avatar") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('profileAvatar').src = data.avatar + '?t=' + Date.now();
+                const app2 = document.querySelector('[x-data]');
+                if (app2 && app2.__x) {
+                    app2.__x.$data.hasAvatar = true;
+                    app2.__x.$data.avatarUrl = data.avatar + '?t=' + Date.now();
+                }
+                showToastMessage(data.message, 'success');
+            }
+        })
+        .catch(error => console.error('Erreur:', error));
+    }
+}
+
+function showToastMessage(message, type) {
+    const app = document.querySelector('[x-data]');
+    if (app && app.__x) {
+        app.__x.$data.showMessage(message, type);
+    }
+}
 </script>
+
 @endsection

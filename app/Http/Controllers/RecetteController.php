@@ -180,4 +180,22 @@ class RecetteController extends Controller
             ], 500);
         }
     }
+
+     public function getDetails($id)
+    {
+        try {
+            $recette = Recette::with(['ingredients', 'user', 'likes'])
+                ->findOrFail($id);
+            
+            return response()->json([
+                'success' => true,
+                'recette' => $recette
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Recette non trouvée'
+            ], 404);
+        }
+    }
 }

@@ -34,6 +34,11 @@
         outline: none;
     }
     
+    .form-input.error {
+        border-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+    
     .modal-scroll {
         overflow-y: auto;
         max-height: 90vh;
@@ -74,13 +79,14 @@
     .recipe-card {
         background: white;
         border-radius: 2rem;
-        overflow: hidden;
+        overflow: visible;
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         border: 1px solid #f3f4f6;
         position: relative;
         text-align: center;
-        padding: 1.5rem 1.5rem 1.25rem;
+        padding: 0 1.5rem 1.25rem;
+        margin-top: 70px;
     }
     
     .recipe-card:hover {
@@ -89,19 +95,30 @@
         border-color: #f97316;
     }
     
+    .recipe-avatar-wrapper {
+        position: relative;
+        margin-top: -70px;
+        margin-bottom: 0.75rem;
+        z-index: 1;
+        transition: all 0.4s ease;
+    }
+    
+    .recipe-card:hover .recipe-avatar-wrapper {
+        margin-top: -90px;
+    }
+    
     .recipe-avatar {
-        width: 150px;
-        height: 150px;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
         overflow: hidden;
-        margin: 0 auto 1rem;
-        border: 4px solid #f3f4f6;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        margin: 0 auto;
+        border: 4px solid white;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         transition: all 0.4s ease;
         position: relative;
         cursor: pointer;
         background: #fef3c7;
-        flex-shrink: 0;
     }
     
     .recipe-card:hover .recipe-avatar {
@@ -166,6 +183,8 @@
         -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        position: relative;
+        z-index: 0;
     }
     
     .recipe-desc {
@@ -176,8 +195,51 @@
         -webkit-box-orient: vertical;
         overflow: hidden;
         font-style: italic;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
         min-height: 2.4rem;
+        position: relative;
+        z-index: 0;
+    }
+    
+    .recipe-info-row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+        flex-wrap: wrap;
+        position: relative;
+        z-index: 0;
+    }
+    
+    .recipe-date {
+        font-size: 0.6rem;
+        color: #9ca3af;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    
+    .recipe-date i {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .recipe-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        background: #fef3c7;
+        padding: 0.2rem 0.7rem;
+        border-radius: 1rem;
+        font-size: 0.6rem;
+        font-weight: 700;
+        color: #d97706;
+    }
+    
+    .recipe-badge i {
+        width: 12px;
+        height: 12px;
     }
     
     .recipe-meta {
@@ -186,6 +248,8 @@
         justify-content: space-between;
         padding-top: 0.75rem;
         border-top: 2px solid #f3f4f6;
+        position: relative;
+        z-index: 0;
     }
     
     .recipe-meta-left {
@@ -264,24 +328,6 @@
         background: #f97316;
         color: white;
     }
-    
-    .recipe-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.3rem;
-        background: #fef3c7;
-        padding: 0.2rem 0.7rem;
-        border-radius: 1rem;
-        font-size: 0.6rem;
-        font-weight: 700;
-        color: #d97706;
-        margin-top: 0.25rem;
-    }
-    
-    .recipe-badge i {
-        width: 12px;
-        height: 12px;
-    }
 
     .instructions-modal-content {
         display: flex;
@@ -298,11 +344,12 @@
         }
         
         .instructions-image-section {
-            flex: 0 0 42%;
-            max-width: 42%;
+            flex: 0 0 35%;
+            max-width: 35%;
             border-radius: 2rem 0 0 2rem;
             overflow: hidden;
             height: 100%;
+            margin-left: 1.5rem;
         }
         
         .instructions-text-section {
@@ -310,6 +357,7 @@
             overflow-y: auto;
             max-height: 65vh;
             padding: 1.5rem 1.5rem 1.5rem 2rem;
+            margin-right: 1.5rem;
         }
         
         .instructions-text-section::-webkit-scrollbar {
@@ -478,6 +526,7 @@
         color: #f97316;
     }
 
+    /* Toast personnalisé avec bordure orange */
     .toast-message {
         position: fixed;
         top: 20px;
@@ -490,21 +539,21 @@
         box-shadow: 0 10px 40px rgba(0,0,0,0.15);
         animation: slideIn 0.3s ease-out;
         max-width: 400px;
+        background: white;
+        border-left: 5px solid;
+        color: #1f2937;
     }
     
     .toast-success {
-        background: #10b981;
-        color: white;
+        border-left-color: #10b981;
     }
     
     .toast-error {
-        background: #ef4444;
-        color: white;
+        border-left-color: #ef4444;
     }
     
     .toast-info {
-        background: #3b82f6;
-        color: white;
+        border-left-color: #3b82f6;
     }
     
     @keyframes slideIn {
@@ -539,6 +588,64 @@
         width: 60px;
         height: 60px;
     }
+
+    /* Styles pour les champs en erreur */
+    .field-error {
+        border-color: #ef4444 !important;
+        background-color: #fef2f2 !important;
+    }
+    
+    .field-error:focus {
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+    }
+    
+    .error-indicator {
+        color: #ef4444;
+        font-size: 0.75rem;
+        margin-top: 0.25rem;
+        display: none;
+    }
+    
+    .error-indicator.show {
+        display: block;
+    }
+    
+    .label-required {
+        color: #ef4444;
+        margin-left: 2px;
+    }
+
+    /* Styles pour les dates dans la modale */
+    .recipe-dates {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        margin: 1rem 0;
+        padding: 0.75rem;
+        background: #f9fafb;
+        border-radius: 0.75rem;
+        border: 1px solid #f3f4f6;
+    }
+    
+    .recipe-dates .date-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.75rem;
+        color: #6b7280;
+    }
+    
+    .recipe-dates .date-item i {
+        width: 14px;
+        height: 14px;
+        color: #f97316;
+    }
+    
+    .recipe-dates .date-item span {
+        font-weight: 600;
+        color: #1f2937;
+    }
 </style>
 
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -548,7 +655,6 @@
             <h1 class="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 tracking-tighter">
                 Mes<span class="text-orange-500"> Recettes</span>
             </h1>
-            <p class="text-gray-500 mt-1 text-sm sm:text-base">Gerez vos creations culinaires</p>
         </div>
         <span class="text-sm bg-orange-100 text-orange-600 px-3 py-1 rounded-full font-bold">{{ $recettes->count() }} recettes</span>
     </div>
@@ -559,27 +665,36 @@
                 @php
                     $likesCount = $recette->likes->count();
                     $totalIngredients = $recette->ingredients->count();
+                    $createdAt = $recette->created_at ? $recette->created_at->format('d/m/Y') : 'Date inconnue';
                 @endphp
                 
                 <div class="recipe-card">
                     
-                    <div class="recipe-avatar" onclick="viewInstructions({{ $recette->id }})">
-                        <img src="{{ asset('storage/' . $recette->image_path) }}" 
-                             alt="{{ $recette->titre }}">
-                        <div class="recipe-avatar-overlay">
-                            <span>
-                                <i data-lucide="utensils-crossed"></i>
-                                Voir
-                            </span>
+                    <div class="recipe-avatar-wrapper">
+                        <div class="recipe-avatar" onclick="viewInstructions({{ $recette->id }})">
+                            <img src="{{ asset('storage/' . $recette->image_path) }}" 
+                                 alt="{{ $recette->titre }}">
+                            <div class="recipe-avatar-overlay">
+                                <span>
+                                    <i data-lucide="utensils-crossed"></i>
+                                    Découvrir
+                                </span>
+                            </div>
                         </div>
                     </div>
                     
                     <h3 class="recipe-title">{{ $recette->titre }}</h3>
                     <p class="recipe-desc">"{{ $recette->description }}"</p>
                     
-                    <div class="recipe-badge">
-                        <i data-lucide="star"></i>
-                        {{ $likesCount }} likes
+                    <div class="recipe-info-row">
+                        <div class="recipe-date">
+                            <i data-lucide="calendar"></i>
+                            {{ $createdAt }}
+                        </div>
+                        <div class="recipe-badge">
+                            <i data-lucide="star"></i>
+                            {{ $likesCount }} likes
+                        </div>
                     </div>
                     
                     <div class="recipe-meta">
@@ -594,7 +709,7 @@
                         
                         <div class="recipe-actions-group">
                             <button onclick="viewInstructions({{ $recette->id }})" 
-                                    class="action-pill view" title="Voir">
+                                    class="action-pill view" title="Découvrir">
                                 <i data-lucide="utensils-crossed"></i>
                             </button>
                             <button onclick="editRecette({{ $recette->id }})" 
@@ -648,32 +763,42 @@
             <form id="recipeForm" class="space-y-4 sm:space-y-6" enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="recette_id" id="recette_id">
-                <!-- CHANGEMENT: utilisation de PUT au lieu de PATCH -->
                 <input type="hidden" name="_method" id="form_method" value="POST">
                 
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1 sm:mb-2">Titre <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        Titre <span class="label-required">*</span>
+                    </label>
                     <input type="text" name="titre" id="titre" 
                            class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-gray-200 focus:border-orange-500 transition-colors text-sm sm:text-base"
                            placeholder="Ex: Tiramisu maison">
+                    <div class="error-indicator" id="titre-error">Ce champ est requis</div>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1 sm:mb-2">Description <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        Description <span class="label-required">*</span>
+                    </label>
                     <textarea name="description" id="description" rows="2"
                               class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-gray-200 focus:border-orange-500 transition-colors text-sm sm:text-base"
                               placeholder="Une petite description de votre recette..."></textarea>
+                    <div class="error-indicator" id="description-error">Ce champ est requis</div>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1 sm:mb-2">Instructions <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        Instructions <span class="label-required">*</span>
+                    </label>
                     <textarea name="instructions" id="instructions" rows="3"
                               class="form-input w-full px-3 sm:px-4 py-2 sm:py-3 rounded-xl border border-gray-200 focus:border-orange-500 transition-colors text-sm sm:text-base"
                               placeholder="Decrivez les etapes de preparation..."></textarea>
+                    <div class="error-indicator" id="instructions-error">Ce champ est requis</div>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1 sm:mb-2">Photo <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        Photo <span class="label-required">*</span>
+                    </label>
                     <div class="relative">
                         <input type="file" name="image" id="image" accept="image/*" class="hidden">
                         <div id="imagePreview" class="hidden mb-2 sm:mb-3">
@@ -692,10 +817,13 @@
                             <span id="imageUploadText">Choisir une image</span>
                         </button>
                     </div>
+                    <div class="error-indicator" id="image-error">Ce champ est requis</div>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-1 sm:mb-2">Ingredients <span class="text-red-500">*</span></label>
+                    <label class="block text-sm font-bold text-gray-700 mb-1 sm:mb-2">
+                        Ingredients <span class="label-required">*</span>
+                    </label>
                     <div id="ingredientsContainer" class="space-y-2 sm:space-y-3">
                         <div class="ingredient-item flex flex-col sm:flex-row gap-2 sm:gap-3">
                             <input type="text" name="ingredients[0][nom]" placeholder="Nom"
@@ -714,6 +842,7 @@
                         <i data-lucide="plus-circle" class="w-4 h-4"></i>
                         Ajouter un ingredient
                     </button>
+                    <div class="error-indicator" id="ingredients-error">Au moins un ingredient est requis</div>
                 </div>
                 
                 <div class="flex flex-col sm:flex-row gap-3 pt-2 sm:pt-4 sticky bottom-0 bg-white py-3 sm:py-4 -mx-4 sm:-mx-6 px-4 sm:px-6 border-t border-gray-100">
@@ -807,10 +936,10 @@ var isEditing = false;
 
 function showToast(message, type) {
     type = type || 'success';
-    var colors = {
-        success: '#10b981',
-        error: '#ef4444',
-        info: '#3b82f6'
+    var icons = {
+        success: '✓',
+        error: '✕',
+        info: 'ℹ'
     };
     
     var existingToasts = document.querySelectorAll('.toast-message');
@@ -818,15 +947,14 @@ function showToast(message, type) {
     
     var toast = document.createElement('div');
     toast.className = 'toast-message toast-' + type;
-    toast.style.background = colors[type] || colors.success;
-    toast.textContent = message;
+    toast.innerHTML = '<span style="font-weight:700;margin-right:8px;">' + icons[type] + '</span> ' + message;
     document.body.appendChild(toast);
     
     setTimeout(function() {
         toast.style.opacity = '0';
         toast.style.transform = 'translateX(50px)';
         setTimeout(function() { toast.remove(); }, 300);
-    }, 3000);
+    }, 3500);
 }
 
 function addIngredient() {
@@ -857,8 +985,29 @@ function removeIngredient(btn) {
     }
 }
 
+function clearErrors() {
+    document.querySelectorAll('.field-error').forEach(function(el) {
+        el.classList.remove('field-error');
+    });
+    document.querySelectorAll('.error-indicator').forEach(function(el) {
+        el.classList.remove('show');
+    });
+}
+
+function showFieldError(fieldId) {
+    var field = document.getElementById(fieldId);
+    if (field) {
+        field.classList.add('field-error');
+        var errorEl = document.getElementById(fieldId + '-error');
+        if (errorEl) {
+            errorEl.classList.add('show');
+        }
+    }
+}
+
 function openCreateModal() {
     isEditing = false;
+    clearErrors();
     document.getElementById('modalTitle').textContent = 'Nouvelle Recette';
     document.getElementById('submitBtnText').textContent = 'Publier la recette';
     document.getElementById('form_method').value = 'POST';
@@ -883,11 +1032,6 @@ function openCreateModal() {
     `;
     ingredientIndex = 1;
     
-    // Supprimer l'attribut required pour la modification
-    document.querySelectorAll('#recipeForm [required]').forEach(function(el) {
-        el.removeAttribute('required');
-    });
-    
     document.getElementById('recipeModal').style.display = 'flex';
     document.body.style.overflow = 'hidden';
     if (window.lucide) lucide.createIcons();
@@ -910,20 +1054,15 @@ async function editRecette(id) {
         var recette = data.recette;
         
         isEditing = true;
+        clearErrors();
         document.getElementById('modalTitle').textContent = 'Modifier la Recette';
         document.getElementById('submitBtnText').textContent = 'Mettre a jour';
-        // CHANGEMENT IMPORTANT: Utiliser PUT au lieu de PATCH
         document.getElementById('form_method').value = 'PUT';
         document.getElementById('recette_id').value = id;
         document.getElementById('titre').value = recette.titre || '';
         document.getElementById('description').value = recette.description || '';
         document.getElementById('instructions').value = recette.instructions || '';
         document.getElementById('imageUploadText').textContent = 'Changer l image';
-        
-        // Supprimer l'attribut required pour la modification
-        document.querySelectorAll('#recipeForm [required]').forEach(function(el) {
-            el.removeAttribute('required');
-        });
         
         if (recette.image_path) {
             document.getElementById('previewImg').src = '/storage/' + recette.image_path;
@@ -983,6 +1122,7 @@ function closeModal() {
     document.body.style.overflow = 'auto';
     document.getElementById('recipeForm').reset();
     document.getElementById('imagePreview').classList.add('hidden');
+    clearErrors();
     isEditing = false;
 }
 
@@ -990,6 +1130,17 @@ function removeImage() {
     document.getElementById('image').value = '';
     document.getElementById('imagePreview').classList.add('hidden');
     document.getElementById('imageUploadText').textContent = 'Choisir une image';
+}
+
+function splitInstructions(text) {
+    if (!text) return [];
+    var steps = text.split(/[.,;]\s+|\n+/).filter(function(step) {
+        return step.trim() !== '';
+    });
+    if (steps.length <= 1 && !text.includes('.') && !text.includes(',') && !text.includes(';')) {
+        return [text.trim()];
+    }
+    return steps.map(function(step) { return step.trim(); });
 }
 
 async function viewInstructions(id) {
@@ -1008,6 +1159,14 @@ async function viewInstructions(id) {
         
         var recette = data.recette;
         
+        var createdDate = recette.created_at ? new Date(recette.created_at).toLocaleDateString('fr-FR', {
+            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        }) : 'Date inconnue';
+        
+        var updatedDate = recette.updated_at ? new Date(recette.updated_at).toLocaleDateString('fr-FR', {
+            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        }) : 'Date inconnue';
+        
         document.getElementById('instructionsTitle').textContent = recette.titre;
         document.getElementById('instructionsSubtitle').textContent = recette.description || 'Decouvrez les etapes de cette recette';
         
@@ -1020,14 +1179,12 @@ async function viewInstructions(id) {
             ingredientsHtml = '<span class="text-gray-400 text-sm">Aucun ingredient</span>';
         }
         
+        var steps = splitInstructions(recette.instructions);
         var instructionsHtml = '';
-        if (recette.instructions && recette.instructions.includes('\n')) {
-            var steps = recette.instructions.split('\n').filter(function(step) { return step.trim() !== ''; });
+        if (steps.length > 0) {
             instructionsHtml = steps.map(function(step, index) {
                 return '<div class="instruction-item"><div class="instruction-number">' + (index + 1) + '</div><div class="instruction-text"><p>' + step + '</p></div></div>';
             }).join('');
-        } else if (recette.instructions) {
-            instructionsHtml = '<div class="instruction-item"><div class="instruction-number">1</div><div class="instruction-text"><p>' + recette.instructions + '</p></div></div>';
         } else {
             instructionsHtml = '<p class="text-gray-500 text-center py-8">Aucune instruction disponible</p>';
         }
@@ -1050,7 +1207,18 @@ async function viewInstructions(id) {
                 </div>
                 ${instructionsHtml}
                 
-                <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #f3f4f6;">
+                <div class="recipe-dates">
+                    <div class="date-item">
+                        <i data-lucide="calendar"></i>
+                        Publiée le : <span>${createdDate}</span>
+                    </div>
+                    <div class="date-item">
+                        <i data-lucide="clock"></i>
+                        Modifiée le : <span>${updatedDate}</span>
+                    </div>
+                </div>
+                
+                <div style="padding-top: 0.5rem; border-top: 2px solid #f3f4f6;">
                     <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
                         <i data-lucide="utensils" class="w-4 h-4 text-orange-500"></i>
                         <span style="font-weight: 700; font-size: 0.8rem; color: #374151;">Ingredients</span>
@@ -1126,27 +1294,63 @@ document.getElementById('image').addEventListener('change', function(e) {
             document.getElementById('previewImg').src = ev.target.result;
             document.getElementById('imagePreview').classList.remove('hidden');
             document.getElementById('imageUploadText').textContent = 'Changer l image';
+            document.getElementById('image').classList.remove('field-error');
+            document.getElementById('image-error').classList.remove('show');
         };
         reader.readAsDataURL(e.target.files[0]);
     }
 });
 
-// Soumission du formulaire - CORRIGÉE pour utiliser PUT
 document.getElementById('recipeForm').addEventListener('submit', async function(e) {
     e.preventDefault();
+    clearErrors();
     
     var formData = new FormData(this);
     var recetteId = document.getElementById('recette_id').value;
     var method = document.getElementById('form_method').value;
     
+    var hasError = false;
+    var fields = ['titre', 'description', 'instructions'];
+    
+    fields.forEach(function(field) {
+        var value = document.getElementById(field).value.trim();
+        if (!value) {
+            showFieldError(field);
+            hasError = true;
+        }
+    });
+    
+    if (!isEditing) {
+        var imageInput = document.getElementById('image');
+        if (!imageInput.files || imageInput.files.length === 0) {
+            showFieldError('image');
+            hasError = true;
+        }
+    }
+    
+    var ingredientInputs = document.querySelectorAll('#ingredientsContainer input[name$="[nom]"]');
+    var hasIngredients = false;
+    ingredientInputs.forEach(function(input) {
+        if (input.value.trim() !== '') {
+            hasIngredients = true;
+        }
+    });
+    if (!hasIngredients) {
+        document.getElementById('ingredients-error').classList.add('show');
+        hasError = true;
+    }
+    
+    if (hasError) {
+        showToast('Veuillez remplir tous les champs obligatoires', 'error');
+        return;
+    }
+    
     var url = '/mes-recettes';
     var fetchMethod = 'POST';
     
-    // CHANGEMENT IMPORTANT: Utiliser PUT si c'est une modification
     if (method === 'PUT' && recetteId) {
         url = '/mes-recettes/' + recetteId;
         fetchMethod = 'POST';
-        // Laravel utilise _method=PUT pour les formulaires
         formData.append('_method', 'PUT');
     }
     
@@ -1167,11 +1371,20 @@ document.getElementById('recipeForm').addEventListener('submit', async function(
             showToast(data.message, 'success');
             setTimeout(function() { window.location.reload(); }, 1000);
         } else {
-            var errorMessage = data.message || 'Erreur de validation';
             if (data.errors) {
-                errorMessage = Object.values(data.errors).flat().join('\n');
+                for (var field in data.errors) {
+                    if (field === 'ingredients') {
+                        document.getElementById('ingredients-error').classList.add('show');
+                    } else if (field === 'image') {
+                        showFieldError('image');
+                    } else {
+                        showFieldError(field);
+                    }
+                }
+                showToast('Veuillez corriger les erreurs', 'error');
+            } else {
+                showToast(data.message || 'Une erreur est survenue', 'error');
             }
-            showToast(errorMessage, 'error');
         }
     } catch (error) {
         console.error('Erreur:', error);

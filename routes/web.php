@@ -75,4 +75,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/mes-recettes/{id}', [UserRecetteController::class, 'destroy'])->name('user.recettes.destroy');
 
     Route::get('/recettes/{id}', [RecetteController::class, 'show'])->name('recettes.show');
+
+   Route::get('/recettes/{id}/details', [RecetteController::class, 'getDetails'])->name('recettes.details');
+
+   Route::post('/profile/delete-avatar', [ProfileController::class, 'deleteAvatar'])->name('profile.delete-avatar');
 });

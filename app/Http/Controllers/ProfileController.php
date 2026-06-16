@@ -274,4 +274,17 @@ class ProfileController extends Controller
         
         return $badges;
     }
+
+    public function deleteAvatar(Request $request)
+{
+    $user = auth()->user();
+    if ($user->avatar) {
+        // Supprimer le fichier
+        Storage::delete($user->avatar);
+        $user->avatar = null;
+        $user->save();
+        return response()->json(['success' => true, 'message' => 'Avatar supprimé avec succès']);
+    }
+    return response()->json(['success' => false, 'message' => 'Aucun avatar à supprimer']);
+}
 }
